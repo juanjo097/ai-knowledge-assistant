@@ -5,4 +5,4 @@ This module contains service classes that implement business logic
 and orchestrate operations for the AI Knowledge Assistant.
 """
 
-__all__ = ['ingestion_service', 'chunk_service']
+__all__ = []

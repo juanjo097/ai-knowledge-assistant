@@ -3,8 +3,13 @@ from flask import Flask
 
 
 def register_routes(app: Flask):
-    from .upload import bp as upload_bp
-    app.register_blueprint(upload_bp)
+    from .upload_routes import bp as upload_bp
+    from .chunks_routes import bp as chunks_bp
+    from .index_routes import bp as index_bp
     
-    from .chunk import bp as chunks_bp
+    app.register_blueprint(upload_bp)
     app.register_blueprint(chunks_bp)
+    app.register_blueprint(index_bp)
+    
+    
+__all__ = ["register_routes"]

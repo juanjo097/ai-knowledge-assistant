@@ -17,8 +17,13 @@ This is the Flask-based backend for the AI Knowledge Assistant application.
 
 3. **Set up environment variables:**
    ```bash
+   # Copy the template and fill in your secrets
+   cp env.template .env
+   # Edit .env with your actual API keys and secret values
+   
+   # Or copy the example and add your secrets
    cp env.example .env
-   # Edit .env with your actual values
+   # Edit .env to add your actual API keys and secret values
    ```
 
 ## Running the Application
@@ -50,14 +55,21 @@ backend/
 │   └── __init__.py      # Flask app factory and configuration
 ├── config/              # Configuration package
 │   ├── __init__.py      # Configuration package init
-│   ├── config.py        # Environment-specific config classes
-│   └── settings.py      # Application settings and constants
+│   └── config.py        # Environment-specific config classes
 ├── data/                # Database and data files
 ├── uploads/             # File upload directory
 ├── temp/                # Temporary files
 ├── logs/                # Application logs
 ├── run.py               # Application entry point
 ├── requirements.txt     # Python dependencies
-├── env.example          # Environment variables template
+├── env.example          # Environment variables template (no secrets)
+├── env.template         # Template for secrets (copy to .env)
 └── README.md            # This file
 ```
+
+## Security Notes
+
+⚠️ **Important**: Never commit your `.env` file to version control!
+- Copy `env.template` to `.env` and fill in your actual API keys
+- The `.env` file is already in `.gitignore` for security
+- Use `env.example` for non-sensitive configuration values

@@ -28,16 +28,16 @@ def embed_texts(texts: list[str]) -> np.ndarray:
 
 
 def build_index_for_doc(doc_id: int) -> dict:
-    """Toma los chunks del doc, genera embeddings y construye índice FAISS."""
+    """Takes the document's chunks, generates embeddings, and builds a FAISS index."""
     with get_session() as db:
         chunks = chunk_repo.list_by_doc(db, doc_id)
     if not chunks:
-        raise APIError("El documento no tiene chunks. Ejecuta primero /chunks/build.", 400)
+        raise APIError("The document has no chunks. Please run /chunks/build first.", 400)
 
     texts = [c.text for c in chunks]
     vectors = embed_texts(texts)
 
-    # Mapear posiciones a ids reales de chunk
+    # Map positions to actual chunk ids
     chunk_ids = [c.id for c in chunks]
 
     faiss_store.save_index(doc_id, vectors, chunk_ids)

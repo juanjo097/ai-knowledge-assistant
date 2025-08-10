@@ -22,7 +22,7 @@ def _parse_file_to_text(storage: FileStorage) -> tuple[str, str]:
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
 
     raw = storage.stream.read()
-    # Intenta decodificar en UTF-8, luego latin-1 como fallback
+    # Try to decode as UTF-8, then fallback to latin-1
     try:
         content = raw.decode("utf-8")
     except UnicodeDecodeError:
@@ -43,23 +43,23 @@ def _parse_file_to_text(storage: FileStorage) -> tuple[str, str]:
 
 
 def ingest_file(storage: FileStorage) -> dict:
-    """Valida y persiste el documento normalizado.
-    Devuelve {doc_id, filename, mime, reused, stats}.
+    """Validates and persists the normalized document.
+    Returns {doc_id, filename, mime, reused, stats}.
     """
     settings = current_app.config["SETTINGS"]
 
     if not storage or not storage.filename:
-        raise APIError("Archivo no proporcionado", 400)
+        raise APIError("File not provided", 400)
 
     filename = secure_filename(storage.filename)
     if not _allowed(filename):
         raise APIError(
-            f"Extensión no permitida. Permitidas: {settings.ALLOWED_EXT}", 400
+            f"Extension not allowed. Allowed: {settings.ALLOWED_EXT}", 400
         )
 
     text, mime = _parse_file_to_text(storage)
     if not text.strip():
-        raise APIError("El archivo está vacío tras normalización", 400)
+        raise APIError("The file is empty after normalization", 400)
 
     checksum = sha256_hex(text)
 
@@ -71,7 +71,7 @@ def ingest_file(storage: FileStorage) -> dict:
             doc = document_repo.create(db, filename=filename, mime=mime, checksum=checksum)
             reused = False
 
-    # Persistir contenido normalizado a disco
+    # Persist normalized content to disk
     docs_dir = os.path.join(settings.DATA_DIR, "docs")
     os.makedirs(docs_dir, exist_ok=True)
     path = os.path.join(docs_dir, f"{doc.id}.txt")

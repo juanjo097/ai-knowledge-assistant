@@ -15,9 +15,9 @@ class ChunkStats:
 
 
 def _split_text(text: str, size: int, overlap: int) -> list[tuple[str, int, int]]:
-    """Divide `text` en fragmentos por CARACTERES con solape.
-    MVP: por simplicidad; más adelante podemos pasar a tokens reales.
-    Devuelve lista de (fragmento, inicio, fin).
+    """Splits `text` into fragments by CHARACTERS with overlap.
+    MVP: for simplicity; later we can switch to real tokens.
+    Returns a list of (fragment, start, end).
     """
     n = len(text)
     chunks = []
@@ -36,7 +36,7 @@ def build_chunks_for_doc(doc_id: int) -> ChunkStats:
     settings = current_app.config["SETTINGS"]
     path = os.path.join(settings.DATA_DIR, "docs", f"{doc_id}.txt")
     if not os.path.exists(path):
-        raise APIError(f"No se encontró el documento normalizado: {path}")
+        raise APIError(f"Normalized document not found: {path}")
 
     with open(path, "r", encoding="utf-8") as f:
         text = f.read()
@@ -45,7 +45,7 @@ def build_chunks_for_doc(doc_id: int) -> ChunkStats:
 
     with get_session() as db:
         if chunk_repo.exists_for_doc(db, doc_id):
-            # Evita duplicados si ya se corrió antes
+            # Avoid duplicates if already processed before
             existing = chunk_repo.list_by_doc(db, doc_id)
             total_tokens = sum(len(c.text.split()) for c in existing)
             return ChunkStats(count=len(existing), total_tokens=total_tokens)
@@ -53,7 +53,7 @@ def build_chunks_for_doc(doc_id: int) -> ChunkStats:
         rows: list[Chunk] = []
         total_tokens = 0
         for idx, (frag, start, end) in enumerate(parts):
-            token_count = len(frag.split())  # aproximación por palabras
+            token_count = len(frag.split())  # approximation by words
             total_tokens += token_count
             rows.append(
                 Chunk(doc_id=doc_id, order=idx, text=frag, start=start, end=end, token_count=token_count)

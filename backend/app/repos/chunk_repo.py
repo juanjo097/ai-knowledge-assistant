@@ -16,3 +16,9 @@ def list_by_doc(db: Session, doc_id: int) -> list[Chunk]:
 def bulk_insert(db: Session, rows: list[Chunk]):
     db.add_all(rows)
     db.commit()
+    
+def get_by_ids(db: Session, ids: list[int]) -> list[Chunk]:
+    if not ids:
+        return []
+    stmt = select(Chunk).where(Chunk.id.in_(ids))
+    return list(db.execute(stmt).scalars())

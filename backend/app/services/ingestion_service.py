@@ -9,7 +9,7 @@ from flask import current_app
 from config.database import get_session
 from app.utils.text import normalize_text, sha256_hex
 from app.repos import document_repo
-from error_handlers.exceptions import APIError
+from errors.exceptions import APIError
 
 
 def _allowed(filename: str) -> bool:

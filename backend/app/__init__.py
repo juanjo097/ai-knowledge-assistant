@@ -3,7 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from config import Settings
 from config.database import init_db
-from error_handlers import register_error_handlers
+from errors import register_error_handlers
 import logging
 from .routes import register_routes
 

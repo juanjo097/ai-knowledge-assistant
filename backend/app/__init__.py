@@ -6,6 +6,8 @@ from config.database import init_db
 from errors import register_error_handlers
 import logging
 from .routes import register_routes
+from app.middleware import auth_middleware
+
 
 def create_app():
     # Load environment variables
@@ -33,6 +35,9 @@ def create_app():
     
     # Register routes
     register_routes(app)
+    
+    # Register middleware
+    auth_middleware(app)
     
     # Basic logging
     logging.basicConfig(

@@ -117,6 +117,7 @@ ADMIN_USER=admin
 ADMIN_PASS=supersecreto123
 JWT_SECRET=change-me
 JWT_EXPIRES_MIN=120
+OPENAI_API_KEY=""
 
 # (Optional) LLM provider keys, if your chat service calls an external LLM
 # OPENAI_API_KEY=...

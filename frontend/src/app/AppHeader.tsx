@@ -24,7 +24,6 @@ export default function AppHeader() {
           indicatorColor="secondary"
         >
           <Tab label="Home" />
-          <Tab label="Chat" />
           <Tab label="Notes" />
         </Tabs>
         <Box sx={{ flex: 1 }} />

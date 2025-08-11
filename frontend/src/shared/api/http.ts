@@ -4,7 +4,7 @@ const BASE = import.meta.env.VITE_API_BASE;
 
 async function handle<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    // Si expira o falta token, limpiamos y avisamos
+    // if token is missing, clear the token
     if (res.status === 401) {
       clearToken();
     }

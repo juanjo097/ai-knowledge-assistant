@@ -20,6 +20,7 @@ export default function ChatPanel() {
     msg: string;
     severity: "success" | "error";
   }>({ open: false, msg: "", severity: "success" });
+
   const scrollerRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
@@ -31,41 +32,71 @@ export default function ChatPanel() {
     try {
       await saveLastAnswer(title);
       setSnack({ open: true, msg: "Note saved", severity: "success" });
-    } catch (e: any) {
-      setSnack({ open: true, msg: e.message, severity: "error" });
+    } catch (e) {
+      if (e instanceof Error) {
+        setSnack({ open: true, msg: e.message, severity: "error" });
+      } else {
+        setSnack({ open: true, msg: "An unknown error occurred", severity: "error" });
+      }
     }
   }
 
   return (
     <Card
       variant="outlined"
-      sx={{ height: "70vh", display: "flex", flexDirection: "column" }}
+      sx={{
+        height: "70vh",                
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
       <CardHeader
-        title="2) Chat over your file"
+        titleTypographyProps={{ variant: "subtitle1", fontWeight: 700 }}
+        title="Chat over your file"
         action={
           <Button
             size="small"
-            variant="contained"
-            color="secondary"
+            variant="outlined"
             startIcon={<SaveIcon />}
             onClick={handleSave}
             disabled={!messages.some((m) => m.role === "assistant")}
+            sx={{ borderRadius: 2 }}
           >
             Save last answer
           </Button>
         }
+        sx={{
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          bgcolor: "background.paper",
+          borderBottom: "1px solid",
+          borderColor: "divider",
+          py: 1.25,
+        }}
       />
+
+      {/* Contenido en columna: mensajes (scrollea) + input (fijo abajo) */}
       <CardContent
         sx={{
-          pt: 0,
+          p: 0,
+          flex: 1,                  
           display: "flex",
           flexDirection: "column",
-          height: "100%",
-          gap: 1,
+          overflow: "hidden",      
         }}
       >
-        <Box ref={scrollerRef} sx={{ flex: 1, overflow: "auto", p: 1 }}>
+        {/* Área de mensajes que sí scrollea */}
+        <Box
+          ref={scrollerRef}
+          sx={{
+            flex: "1 1 0",
+            minHeight: 0,           
+            overflowY: "auto",
+            px: 2,
+            py: 1.5,
+          }}
+        >
           {messages.length === 0 ? (
             <Box
               sx={{
@@ -82,8 +113,20 @@ export default function ChatPanel() {
             messages.map((m, i) => <MessageBubble key={i} m={m} />)
           )}
         </Box>
-        <ChatInput disabled={!docId || busy} onSend={send} />
+
+        {/* ChatInput here */}
+        <Box
+          sx={{
+            borderTop: "1px solid",
+            borderColor: "divider",
+            bgcolor: "background.paper",
+            p: 1.25,
+          }}
+        >
+          <ChatInput disabled={!docId || busy} onSend={send} />
+        </Box>
       </CardContent>
+
       <Snackbar
         open={snack.open}
         autoHideDuration={2500}

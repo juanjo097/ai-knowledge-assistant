@@ -64,7 +64,7 @@ export default function LoginPage() {
           gap: 2,
         }}
       >
-        {/* Encabezado simple */}
+        {/* Header Simple */}
         <Box>
           <Typography variant="h5" fontWeight={800}>
             Sign in
@@ -124,7 +124,7 @@ export default function LoginPage() {
           </Button>
         </Box>
 
-        {/* Pie de página discreto */}
+        {/* Footer */}
         <Typography variant="caption" color="text.secondary" textAlign="center">
         Tip: credentials are defined in the backend (.env)
         </Typography>

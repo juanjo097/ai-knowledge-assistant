@@ -1,6 +1,6 @@
-import { Container, Box, Typography } from "@mui/material";
+import { Container, Box } from "@mui/material";
 import { AppTheme } from "../shared/theme";
-import { DocProvider, useDoc } from "./DocContext";
+import { DocProvider } from "./DocContext";
 import AppHeader from "./AppHeader";
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import ProtectedRoute from "../shared/router/ProtectedRoute";
@@ -11,16 +11,10 @@ import ChatPage from "../features/chat/ChatPanel";
 import NotesList from "../features/notes/NotesList";
 
 function Shell() {
-  const { docId } = useDoc();
   return (
     <>
       <AppHeader />
-      <Container maxWidth="lg" sx={{ py: 3 }}>
-        {docId && (
-          <Typography variant="caption" color="text.secondary">
-            Active doc_id: <b>{docId}</b>
-          </Typography>
-        )}
+      <Container maxWidth="xl" sx={{ py: 4 }}>
         <Outlet />
         <Box mt={4} textAlign="center" color="text.secondary" fontSize={12}>
           MVP • RAG + Notes Tool
@@ -37,10 +31,10 @@ export default function App() {
       <DocProvider>
         <BrowserRouter>
           <Routes>
-            {/* Pública */}
+            {/* Public */}
             <Route path="/login" element={<LoginPage />} />
 
-            {/* Protegidas */}
+            {/* Protected */}
             <Route element={<ProtectedRoute />}>
               <Route element={<Shell />}>
                 <Route path="/" element={<Home />} />

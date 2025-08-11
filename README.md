@@ -57,6 +57,7 @@ Monorepo for an AI-powered knowledge assistant. Users can **upload** a file (TXT
 │  │  └─ __init__.py        # create_app(), CORS, blueprint registration
 │  ├─ data/                 # local storage (e.g., notes.json)
 │  ├─ run.py                # app entrypoint
+│  ├─ start.sh              # backend runner (used by root dev.sh)
 │  ├─ requirements.txt
 │  └─ .env.example
 │
@@ -88,16 +89,63 @@ Recommended: a virtual environment for Python (`venv`).
 
 ---
 
-## Local Development
+## Run Frontend + Backend together (single command)
+
+We include a root-level runner `dev.sh` that starts **both** apps at once using your existing backend script.
+
+### First time
+```bash
+# from repo root
+chmod +x dev.sh
+chmod +x backend/start.sh            # make sure your backend script is executable
+./dev.sh --install                   # installs frontend deps and launches both
+```
+
+### Next runs
+```bash
+./dev.sh
+```
+
+### What it does
+- **Backend**: runs `./backend/start.sh` (your own backend runner).  
+  It passes `PORT` and `FLASK_RUN_PORT` using `BACK_PORT`.
+- **Frontend**: runs `npm run dev` in `frontend/` on `FRONT_PORT`.  
+  If `VITE_API_BASE` is not set, it defaults to `http://localhost:${BACK_PORT}`.
+- **.env checks**: validates `backend/.env` and `frontend/.env`.  
+  If missing and a `.env.example` exists, it copies it automatically.
+
+### Overrides (optional)
+```bash
+BACK_PORT=5000 FRONT_PORT=5173 ./dev.sh
+VITE_API_BASE=http://localhost:5000 ./dev.sh
+```
+
+### Troubleshooting
+- **Permission denied** → `chmod +x dev.sh backend/start.sh`
+- **CRLF line endings** (Windows): `sed -i 's/
+$//' dev.sh backend/start.sh`
+- **“backend/start.sh not found”** → ensure the file name and path match
+
+---
+
+## Local Development (run individually)
 
 ### 1) Backend
 
+**Option A — via your `start.sh` (recommended)**
+```bash
+cd backend
+chmod +x start.sh        # first time only
+./start.sh               # starts Flask app (http://localhost:5000)
+```
+
+**Option B — manual (venv)**
 ```bash
 cd backend
 
 # (once) create & activate venv
 python -m venv venv
-source venv/bin/activate           # Windows: venv\Scripts\activate
+source venv/bin/activate           # Windows: venv\Scriptsctivate
 
 # install deps
 pip install -r requirements.txt
@@ -117,7 +165,6 @@ ADMIN_USER=admin
 ADMIN_PASS=supersecreto123
 JWT_SECRET=change-me
 JWT_EXPIRES_MIN=120
-OPENAI_API_KEY=""
 
 # (Optional) LLM provider keys, if your chat service calls an external LLM
 # OPENAI_API_KEY=...

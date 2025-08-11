@@ -15,6 +15,13 @@ Monorepo for an AI-powered knowledge assistant. Users can **upload** a file (TXT
 
 ---
 
+
+## Project Documentation
+
+- Notion: [Mini AI Knowledge Assistant with RAG and Tools](https://www.notion.so/Mini-AI-Knowledge-Assistant-with-RAG-and-Tools-24c2982da6d7801cadb0f656b9a33d3b?source=copy_link)
+
+---
+
 ## Architecture Overview
 
 ```

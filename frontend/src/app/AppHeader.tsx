@@ -4,7 +4,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import IconButton from "@mui/material/IconButton";
 import { clearToken } from "../features/auth/auth";
 
-const routes = ["/", "/chat", "/notes"];
+const routes = ["/", "/notes"];
 
 export default function AppHeader() {
   const { pathname } = useLocation();
